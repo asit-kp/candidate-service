@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Serverless Offline",
+            "program": "node_modules/serverless/bin/serverless",
+            "args": ["offline", "start", "--httpPort", "4000", "--noTimeout" ],
+            "runtimeExecutable": "node",
+            "env": {
+                "CANDIDATE_TABLE": "candidate-service-dev",
+                "CANDIDATE_EMAIL_TABLE": "candidate-email-dev",
+                "tableName": "candidate-service-dev"
+            },
+            "windows": {
+                "program": "node_modules\\serverless\\bin\\serverless"
+            }
+
+        }
+    ]
+}

@@ -5,7 +5,15 @@ const AWS = require('aws-sdk');
 
 AWS.config.setPromisesDependency(require('bluebird'));
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+let options = {};
+if (process.env.IS_OFFLINE) {
+  options = {
+  region: 'localhost',
+  endpoint: 'http://localhost:8000'
+  };
+}
+
+const dynamoDb = new AWS.DynamoDB.DocumentClient(options);
 
 module.exports.submit = (event, context, callback) => {
   const requestBody = JSON.parse(event.body);
@@ -66,7 +74,7 @@ const candidateInfo = (fullname, email, experience) => {
 module.exports.list = (event, context, callback) => {
   var params = {
       TableName: process.env.CANDIDATE_TABLE,
-      ProjectionExpression: "id, fullname, email"
+      ProjectionExpression: "id, fullname, email, experience"
   };
 
   console.log("Scanning Candidate table.");

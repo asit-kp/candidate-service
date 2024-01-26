@@ -2,6 +2,12 @@
   "dependencies": {
     "aws-sdk": "^2.1543.0",
     "bluebird": "^3.7.2",
+    "serverless": "^3.38.0",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "serverless-dynamodb": "^0.2.47",
+    "serverless-dynamodb-local": "^0.2.40",
+    "serverless-offline": "^13.3.3"
   }
 }

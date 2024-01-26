@@ -19,6 +19,18 @@ provider:
         - dynamodb:PutItem
       Resource: "*"
 
+custom:
+  tableName: candidate-service-dev
+  dynamodb:
+      stages:
+          - dev
+      start:
+          port: 8000
+          inMemory: true
+          migrate: true
+      migration:
+          dir: offline/migrations
+
 functions:
   candidateSubmission:
     handler: api/candidate.submit
@@ -63,3 +75,8 @@ resources:
         StreamSpecification:
           StreamViewType: "NEW_AND_OLD_IMAGES"
         TableName: ${self:provider.environment.CANDIDATE_TABLE}
+
+plugins:
+  - serverless-dynamodb
+  - serverless-offline
+
