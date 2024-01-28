@@ -54,6 +54,15 @@ functions:
       - http:
           path: candidates/{id}
           method: get
+  deleteCandidate:
+    handler: api/candidate.delete
+    memorySize: 128
+    description: Delete specified candidate
+    events:
+      - http: 
+          path: candidates/{id}
+          method: delete
+
 
 resources:
   Resources:
