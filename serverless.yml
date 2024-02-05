@@ -4,7 +4,7 @@ frameworkVersion: ">=1.1.0 <4.0.0"
 
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs16.x
   stage: dev
   region: ap-south-1
   environment:
@@ -33,7 +33,7 @@ custom:
 
 functions:
   candidateSubmission:
-    handler: api/candidate.submit
+    handler: api/CandidateHandler.postCandidateHandler
     memorySize: 128
     description: Submit candidate information and starts interview process.
     events:
@@ -41,27 +41,27 @@ functions:
           path: candidates
           method: post
   listCandidates:
-    handler: api/candidate.list
+    handler: api/CandidateHandler.listCandidateHandler
     memorySize: 128
     description: List all candidates
     events:
       - http: 
           path: candidates
           method: get
-  candidateDetails:
-    handler: api/candidate.get
-    events:
-      - http:
-          path: candidates/{id}
-          method: get
-  deleteCandidate:
-    handler: api/candidate.delete
-    memorySize: 128
-    description: Delete specified candidate
-    events:
-      - http: 
-          path: candidates/{id}
-          method: delete
+  # candidateDetails:
+  #   handler: api/candidate.get
+  #   events:
+  #     - http:
+  #         path: candidates/{id}
+  #         method: get
+  # deleteCandidate:
+  #   handler: api/candidate.delete
+  #   memorySize: 128
+  #   description: Delete specified candidate
+  #   events:
+  #     - http: 
+  #         path: candidates/{id}
+  #         method: delete
 
 
 resources:
@@ -88,4 +88,32 @@ resources:
 plugins:
   - serverless-dynamodb
   - serverless-offline
+  - serverless-plugin-typescript
+
+package:
+  individually: true
+  exlcudeDevDependencies: false
+  include:
+    - api/**/*.js
+    - api/**/models/*.js
+    - api/**/node_modules/**
+    - common/**
+    - models/**
+    - jsonSchema/**
+    - api/**
+  exclude:
+    - 'api/*.ts'
+    - 'api/models/*.ts'
+    - '!api/**/node_modules/aws-sdk/**'
+    - api/**/package.json
+    - api/**/package-lock.json
+    - api/**/.npmrc
+    - venv/**
+    - node_modules/**
+    - tsconfig.json
+    - tslint.json
+    - .npmignore
+    - .vscode/**
+    - '*.ts'
+    - Cloudformation Templates/*
 

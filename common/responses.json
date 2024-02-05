@@ -1,0 +1,22 @@
+{
+    "200": {
+      "statusCode": 200,
+      "message": ""
+    },
+    "400": {
+      "statusCode": 400,
+      "errorCode": "InvalidRequest",
+      "description": "The request payload is invalid and does not adhere to specification"
+    },
+    "401": {
+      "statusCode": 401,
+      "errorCode": "Unauthorized",
+      "description": "User Does not have permission to execute this request"
+    },
+    "500": {
+      "statusCode": 500,
+      "errorCode": "InternalServerError",
+      "description": "Internal Server Error"
+    }
+  }
+  

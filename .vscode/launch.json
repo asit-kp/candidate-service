@@ -10,6 +10,8 @@
             "name": "Launch Serverless Offline",
             "program": "node_modules/serverless/bin/serverless",
             "args": ["offline", "start", "--httpPort", "4000", "--noTimeout" ],
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "runtimeArgs": ["--lazy"],
             "runtimeExecutable": "node",
             "env": {
                 "CANDIDATE_TABLE": "candidate-service-dev",

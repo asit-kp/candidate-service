@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "CandidateCreate",
+    "type": "object",
+    "required": [
+      "fullname",
+      "email",
+      "experience"
+    ],
+    "properties": {
+        "fullname": {
+            "type": "string"
+        },
+        "email": {
+            "type":"boolean"
+        },
+        "experience": {
+            "type":"string"
+        }
+    }
+}
