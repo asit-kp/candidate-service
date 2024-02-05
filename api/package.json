@@ -10,6 +10,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.8",
     "serverless-dynamodb": "^0.2.47",
     "serverless-dynamodb-local": "^0.2.40",
     "serverless-offline": "^13.3.3",
