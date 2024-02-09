@@ -16,6 +16,6 @@
     "500": {
         "statusCode": 500,
         "errorCode": "InternalServerError",
-        "description": "Internal Server Error"
+        "description": "Internal Server Error."
     }
 }

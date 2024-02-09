@@ -48,23 +48,30 @@ export class CandidateService {
     }
   }
 
-  public async scanCandidate(params, callback) {
-    const res = dynamoDb.scan(params, function(err, data) {
-      if (err) {
-          console.log('Scan failed to load data. Error JSON:', JSON.stringify(err, null, 2));
-          return callback(null, utilities.createResponseObject(
-            400,
-            `Failed to retrieve the candidate list`
-          ));
-      } else {
-          console.log("Scan succeeded.",data);
-          return callback(null, {
-            statusCode: 200,
-            body: JSON.stringify({
-                candidates: data.Items
-            })
-        });
+  public async scanCandidate(params) {
+    var res = await dynamoDb.scan(params).promise();
+    console.log(res.Items.length)
+    if (res !=  undefined && res.Items.length != 0){
+      return res
+    }else{
+      return undefined
     }
-});
+
+  }
+  public async getCandidate(params) {
+    var res = await dynamoDb.get(params).promise();
+    if (res !=  undefined){
+      return res
+    }else{
+      return undefined
+    }
+  }
+  public async deleteCandidate(params) {
+    var res = await dynamoDb.delete(params).promise();
+    if (res !=  undefined){
+      return res
+    }else{
+      return undefined
+    }
   }
 }

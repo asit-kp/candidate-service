@@ -8,15 +8,6 @@ const service: CandidateService = new CandidateService();
 
 AWS.config.setPromisesDependency(require('bluebird'));
 
-let options = {};
-if (process.env.IS_OFFLINE) {
-  options = {
-  region: 'localhost',
-  endpoint: 'http://localhost:8000'
-  };
-}
-
-const dynamoDb = new AWS.DynamoDB.DocumentClient(options);
 
 export class CandidateController {
   static initialized: boolean = false;
@@ -85,9 +76,9 @@ public async listCandidateDetails(event: APIGatewayEvent, context: Context, call
   console.log("Scanning Candidate table.");
   
 
-  var res = await dynamoDb.scan(params).promise();
-
-  if (res.Items != undefined){
+  var res = await service.scanCandidate(params);
+  console.log(res);
+  if (res != undefined){
     callback(null, {
       statusCode: 200,
       body: JSON.stringify({
@@ -95,6 +86,81 @@ public async listCandidateDetails(event: APIGatewayEvent, context: Context, call
       })
     });
   }
+  else{
+    callback(null, utility.createResponseObject(
+      400,
+      `Database is empty`
+    ));
+  }
+  
+  } catch (error) {
+    log.error('errored out in CandidateController::post()', error);
+    callback(null, utility.createResponseObject(500,null));
+  }
+}
+
+public async getCandidateDetails(event: APIGatewayEvent, context: Context, callback: ProxyCallback) {
+  try {
+    context.callbackWaitsForEmptyEventLoop = false;
+    log.info('Entered get controller in CandidateController::get()');
+    if (!CandidateController.initialized) {
+      CandidateController.init();
+    }
+    const params = {
+      TableName: process.env.CANDIDATE_TABLE,
+      Key: {
+        id: event.pathParameters.id,
+      },
+    };
+    var res = await service.getCandidate(params);
+
+    if (res.Item != undefined){
+      callback(null, {
+        statusCode: 200,
+        body: JSON.stringify({
+            candidates: res.Item
+        })
+      });
+    }
+    else{
+      callback(null, utility.createResponseObject(
+        400,
+        `No candidate found with id ${event.pathParameters.id}`
+      ));
+    }
+  
+  } catch (error) {
+    log.error('errored out in CandidateController::post()', error);
+    callback(null, utility.createResponseObject(500,null));
+  }
+}
+public async deleteCandidateDetails(event: APIGatewayEvent, context: Context, callback: ProxyCallback) {
+  try {
+    context.callbackWaitsForEmptyEventLoop = false;
+    log.info('Entered delete controller in CandidateController::post()');
+    if (!CandidateController.initialized) {
+      CandidateController.init();
+    }
+    const params = {
+      TableName: process.env.CANDIDATE_TABLE,
+      Key: {
+        id: event.pathParameters.id,
+      },
+    };
+    var res = await service.deleteCandidate(params);
+
+    if (res != undefined){
+      callback(null, utility.createResponseObject(
+        200,
+        `Successfully delete the candidate with id ${event.pathParameters.id}`
+      ));
+    }
+    else{
+      callback(null, utility.createResponseObject(
+        400,
+        `No candidate found with id ${event.pathParameters.id}`
+      ));
+    }
   
   } catch (error) {
     log.error('errored out in CandidateController::post()', error);
@@ -102,80 +168,3 @@ public async listCandidateDetails(event: APIGatewayEvent, context: Context, call
   }
 }
 }
-/*
-module.exports.list = (event, context, callback) => {
-  var params = {
-      TableName: process.env.CANDIDATE_TABLE,
-      ProjectionExpression: "id, fullname, email, experience"
-  };
-
-  console.log("Scanning Candidate table.");
-  const onScan = (err, data) => {
-
-      if (err) {
-          console.log('Scan failed to load data. Error JSON:', JSON.stringify(err, null, 2));
-          callback(err);
-      } else {
-          console.log("Scan succeeded.");
-          return callback(null, {
-              statusCode: 200,
-              body: JSON.stringify({
-                  candidates: data.Items
-              })
-          });
-      }
-
-  };
-
-  
-
-};
-
-module.exports.get = (event, context, callback) => {
-  const params = {
-    TableName: process.env.CANDIDATE_TABLE,
-    Key: {
-      id: event.pathParameters.id,
-    },
-  };
-
-  dynamoDb.get(params).promise()
-    .then(result => {
-      const response = {
-        statusCode: 200,
-        body: JSON.stringify(result.Item),
-      };
-      callback(null, response);
-    })
-    .catch(error => {
-      console.error(error);
-      callback(new Error('Couldn\'t fetch candidate.'));
-      return;
-    });
-};
-
-module.exports.delete = (event, context, callback) => {
-  const params = {
-    TableName: process.env.CANDIDATE_TABLE,
-    Key: {
-      id: event.pathParameters.id,
-    },
-  };
-
-  dynamoDb.delete(params).promise()
-    .then(result => {
-      const response = {
-        statusCode: 200,
-        body: JSON.stringify({
-          message: `Sucessfully deleted the candidate`,
-        })
-      };
-      callback(null, response);
-    })
-    .catch(error => {
-      console.error(error);
-      callback(new Error('Couldn\'t Delete candidate.'));
-      return;
-    });
-};
-*/

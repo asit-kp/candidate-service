@@ -5,4 +5,6 @@ export declare class CandidateController {
     static init(): void;
     postCandidateDetails(event: APIGatewayEvent, context: Context, callback: ProxyCallback): Promise<void>;
     listCandidateDetails(event: APIGatewayEvent, context: Context, callback: ProxyCallback): Promise<void>;
+    getCandidateDetails(event: APIGatewayEvent, context: Context, callback: ProxyCallback): Promise<void>;
+    deleteCandidateDetails(event: APIGatewayEvent, context: Context, callback: ProxyCallback): Promise<void>;
 }
